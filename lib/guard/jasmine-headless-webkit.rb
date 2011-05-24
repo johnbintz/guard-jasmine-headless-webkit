@@ -3,8 +3,16 @@ require 'guard/guard'
 
 module Guard
   class JasmineHeadlessWebkit < Guard
+    def initialize(watchers = [], options = {})
+      super
+      @options = {
+        :all_on_start => true
+      }.merge(options)
+    end
+    
     def start
       UI.info "Guard::JasmineHeadlessWebkit is running."
+      run_all if @options[:all_on_start]
     end
 
     def run_all
