@@ -26,8 +26,8 @@ module Guard
     end
   end
 
-  class DSL
-    def matching_js_file(path)
+  class Dsl
+    def newest_js_file(path)
       Dir[path + '*.{js,coffee}'].sort { |left, right| File.mtime(right) <=> File.mtime(left) }.first
     end
   end
