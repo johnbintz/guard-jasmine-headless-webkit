@@ -10,7 +10,7 @@ Add running your Jasmine specs to your `Guardfile` via [`jasmine-headless-webkit
 
 ## `guard` options
 
-* `:all_on_start => false` to not run everything, just like `guard-rspec`
+* `:all_on_start => false` to not run everything when starting, just like `guard-rspec`
 
 ## What's the deal with `newest_js_file`?
 
