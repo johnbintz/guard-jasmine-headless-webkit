@@ -1,5 +1,5 @@
 module Guard
-  module JasmineHeadlessWebkit
+  module JasmineHeadlessWebkitVersion
     VERSION = "0.0.1"
   end
 end

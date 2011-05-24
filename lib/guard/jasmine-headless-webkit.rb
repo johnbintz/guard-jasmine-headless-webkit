@@ -1,5 +1,6 @@
 require 'guard'
 require 'guard/guard'
+require 'guard/jasmine-headless-webkit/runner'
 
 module Guard
   class JasmineHeadlessWebkit < Guard
@@ -16,13 +17,11 @@ module Guard
     end
 
     def run_all
-      system %{jasmine-headless-webkit}
+      JasmineHeadlessWebkitRunner.run
     end
 
     def run_on_change(paths)
-      system %{jasmine-headless-webkit #{paths.join(" ")}}
-
-      run_all if $?.exitstatus != 1
+      run_all if JasmineHeadlessWebkitRunner.run(paths) != 1
     end
   end
 

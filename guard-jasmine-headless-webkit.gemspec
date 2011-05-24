@@ -4,7 +4,7 @@ require "guard/jasmine-headless-webkit/version"
 
 Gem::Specification.new do |s|
   s.name        = "guard-jasmine-headless-webkit"
-  s.version     = Guard::JasmineHeadlessWebkit::VERSION
+  s.version     = Guard::JasmineHeadlessWebkitVersion::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["John Bintz"]
   s.email       = ["john@coswellproductions.com"]
