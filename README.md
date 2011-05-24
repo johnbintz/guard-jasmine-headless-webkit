@@ -25,6 +25,10 @@ If you 100% know you won't need that support, modify your `Guardfile` as appropr
 
 ## ...and the `.jst` file search?
 
-I use Backbone.js a lot, and I put my view templates in `app/views/*.jst` and mash them all together with Jammit for use in my apps. Feel free
-to change that, it's your Guardfile after all.
+I use [Backbone.js](http://documentcloud.github.com/backbone/) a lot, and I put my view templates in `app/views/*.jst` 
+and mash them all together with [Jammit](https://github.com/documentcloud/jammit) for use in my apps. Feel free to change that, it's your `Guardfile` after all.
+Or, try it. It's easy to do in your `assets.yml` file:
+
+    templates:
+    - app/views/*.jst
 
