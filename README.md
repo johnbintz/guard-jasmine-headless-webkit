@@ -7,6 +7,7 @@ Add running your Jasmine specs to your `Guardfile` via [`jasmine-headless-webkit
     end
 
 `gem install guard-jasmine-headless-webkit` and then `guard init jasmine-headless-webkit` in your project directory to get started.
+You should also put it in your `Gemfile` because, hey, why not, right?
 
 ## `guard` options
 
