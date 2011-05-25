@@ -9,6 +9,9 @@ Add running your Jasmine specs to your `Guardfile` via [`jasmine-headless-webkit
 `gem install guard-jasmine-headless-webkit` and then `guard init jasmine-headless-webkit` in your project directory to get started.
 You should also put it in your `Gemfile` because, hey, why not, right?
 
+Output is colored by default. If you want it not colored, place a `--no-colors` option into the project's or your
+home folder's `.jasmine-headless-webkit` file.
+
 ## `guard` options
 
 * `:all_on_start => false` to not run everything when starting, just like `guard-rspec`
