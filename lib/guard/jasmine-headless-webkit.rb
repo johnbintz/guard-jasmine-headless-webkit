@@ -21,7 +21,7 @@ module Guard
     end
 
     def run_on_change(paths)
-      run_all if JasmineHeadlessWebkitRunner.run(paths) != 1
+      run_all if JasmineHeadlessWebkitRunner.run(paths) == 0
     end
   end
 
