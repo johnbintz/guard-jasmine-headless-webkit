@@ -5,3 +5,4 @@ gemspec
 gem 'guard'
 gem 'rspec'
 gem 'mocha'
+gem 'rake', '0.8.7'
