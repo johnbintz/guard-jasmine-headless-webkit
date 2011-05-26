@@ -25,7 +25,7 @@ module Guard
           end
         end
 
-        Notifier.notify("#{passes + fails} examples, #{fails} failures", :title => 'Jasmine results', :image => (fails == 0) ? :success : :failes)
+        Notifier.notify("#{passes + fails} examples, #{fails} failures", :title => 'Jasmine results', :image => (fails == 0) ? :success : :failed)
         $?.exitstatus
       end
     end
