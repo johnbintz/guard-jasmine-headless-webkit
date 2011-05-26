@@ -1,4 +1,5 @@
 require 'guard/notifier'
+require 'open3'
 
 module Guard
   class JasmineHeadlessWebkitRunner
