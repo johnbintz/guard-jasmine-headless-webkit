@@ -14,7 +14,10 @@ home folder's `.jasmine-headless-webkit` file.
 
 ## `guard` options
 
-* `:all_on_start => false` to not run everything when starting, just like `guard-rspec`
+* `:all_on_start => false` to not run everything when starting, just like `guard-rspec`.
+* `:run_before => "<command to run>` to run a command before running specs. If the command fails, the test run stops. Useful for running Jammit before running your specs to compile templates:
+
+  `guard 'jasmine-headliness-webkit', :run_before => 'jammit -f 2>/dev/null' do`
 
 ## What's the deal with `newest_js_file`?
 

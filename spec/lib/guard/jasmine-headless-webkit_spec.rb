@@ -45,4 +45,30 @@ describe Guard::JasmineHeadlessWebkit do
       end
     end
   end
+
+  context 'with run_before' do
+    context 'with failing command' do
+      before do
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).never
+      end
+
+      let(:options) { { :run_before => 'false' } }
+
+      it "should run the command first" do
+        guard.run_all
+      end
+    end
+
+    context 'with succeeding command' do
+      before do
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).once
+      end
+
+      let(:options) { { :run_before => 'true' } }
+
+      it "should run the command first" do
+        guard.run_all
+      end
+    end
+  end
 end
