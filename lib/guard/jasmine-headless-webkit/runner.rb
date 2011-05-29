@@ -1,32 +1,17 @@
 require 'guard/notifier'
-require 'open3'
 
 module Guard
   class JasmineHeadlessWebkitRunner
     class << self
       def run(paths = [])
-        lines = [""]
+        file = Tempfile.new('guard-jasmine-headless-webkit')
+        file.close
 
-        Open3.popen3(%{jasmine-headless-webkit -c #{paths.join(" ")}}) do |stdin, stdout, stderr|
-          stdin.close
-          stderr.close
-          while !stdout.eof?
-            $stdout.print (char = stdout.getc)
-            $stdout.flush
+        system %{jasmine-headless-webkit --report #{file.path} -c #{paths.join(" ")}}
 
-            if char.chr == "\n"
-              lines << ""
-            else
-              lines.last << char.chr
-            end
-          end
-        end
+        total, fails, any_console, secs = File.read(file.path).strip.split('/')
 
-        total, fails, secs = lines[-2].scan(%r{.* (\d+) tests, (\d+) failures, (.+) secs..*}).flatten
-
-        any_console = lines.any? { |line| line['[console] '] }
-
-        Notifier.notify(message(total, fails, secs, any_console), :title => 'Jasmine results', :image => image(any_console, fails))
+        Notifier.notify(message(total, fails, secs, any_console == "T"), :title => 'Jasmine results', :image => image(any_console == "T", fails))
         fails.to_i
       end
 
