@@ -7,3 +7,4 @@ gem 'rspec'
 gem 'mocha'
 gem 'rake', '0.8.7'
 gem 'growl'
+gem 'fakefs', :require => nil

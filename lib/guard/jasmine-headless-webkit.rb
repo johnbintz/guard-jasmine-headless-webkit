@@ -18,11 +18,14 @@ module Guard
     end
 
     def run_all
-      JasmineHeadlessWebkitRunner.run if run_before
+      JasmineHeadlessWebkitRunner.run if run_before and run_jammit
+      @ran_jammit = false
     end
 
     def run_on_change(paths)
-      if run_before
+      @ran_jammit = false
+      if run_before and run_jammit
+        @ran_jammit = true
         run_all if JasmineHeadlessWebkitRunner.run(paths) == 0
       end
     end
@@ -30,12 +33,25 @@ module Guard
     private
     def run_before
       if @options[:run_before]
-        UI.info "Guard::JasmineHeadlessWebkit running #{@options[:run_before]} first..."
-        system @options[:run_before]
-        $?.exitstatus == 0
+        run_program(@options[:run_before])
       else
         true
       end
+    end
+
+    def run_jammit
+      if @options[:jammit] && !@ran_jammit
+        run_program("Jammit", %{jammit -f 2>/dev/null})
+      else
+        true
+      end
+    end
+
+    def run_program(name, command = nil)
+      command ||= name
+      UI.info "Guard::JasmineHeadlessWebkit running #{name}..."
+      system command
+      $?.exitstatus == 0
     end
   end
 

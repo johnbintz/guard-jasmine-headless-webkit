@@ -50,6 +50,7 @@ describe Guard::JasmineHeadlessWebkit do
     context 'with failing command' do
       before do
         Guard::JasmineHeadlessWebkitRunner.expects(:run).never
+        Guard::UI.expects(:info).with(regexp_matches(/false/))
       end
 
       let(:options) { { :run_before => 'false' } }
@@ -62,12 +63,41 @@ describe Guard::JasmineHeadlessWebkit do
     context 'with succeeding command' do
       before do
         Guard::JasmineHeadlessWebkitRunner.expects(:run).once
+        Guard::UI.expects(:info).with(regexp_matches(/true/))
       end
 
       let(:options) { { :run_before => 'true' } }
 
       it "should run the command first" do
         guard.run_all
+      end
+    end
+  end
+
+  describe 'run jammit first' do
+    context 'run on run_all if called first' do
+      before do
+        guard.expects(:run_program).once.returns(true)
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).once
+      end
+
+      let(:options) { { :jammit => true } }
+
+      it "should run jammit first" do
+        guard.run_all
+      end
+    end
+
+    context 'only run once if run_on_change is successful' do
+      before do
+        guard.expects(:run_program).once.returns(true)
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).twice.returns(0)
+      end
+
+      let(:options) { { :jammit => true } }
+
+      it "should run jammit only once" do
+        guard.run_on_change([])
       end
     end
   end
