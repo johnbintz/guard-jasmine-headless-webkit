@@ -32,7 +32,7 @@ describe Guard::JasmineHeadlessWebkit do
         Guard::JasmineHeadlessWebkitRunner.expects(:run).returns(1)
         guard.expects(:run_all).never
 
-        guard.run_on_change(%w{test})
+        guard.run_on_change(%w{test.js})
       end
     end
 
@@ -41,7 +41,7 @@ describe Guard::JasmineHeadlessWebkit do
         Guard::JasmineHeadlessWebkitRunner.expects(:run).returns(0)
         guard.expects(:run_all).once
 
-        guard.run_on_change(%w{test})
+        guard.run_on_change(%w{test.js})
       end
     end
 
@@ -51,6 +51,15 @@ describe Guard::JasmineHeadlessWebkit do
         guard.expects(:run_all).once
 
         guard.run_on_change([])
+      end
+    end
+
+    context "Files I don't care about given, ignore" do
+      it 'should run all but not run once' do
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).never
+        guard.expects(:run_all).once
+
+        guard.run_on_change(%w{test.jst})
       end
     end
   end
@@ -106,7 +115,7 @@ describe Guard::JasmineHeadlessWebkit do
       let(:options) { { :jammit => true } }
 
       it "should run jammit only once" do
-        guard.run_on_change(%w{path.txt})
+        guard.run_on_change(%w{path.js})
       end
     end
   end

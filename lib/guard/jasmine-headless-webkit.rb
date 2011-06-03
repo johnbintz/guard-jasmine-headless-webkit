@@ -4,11 +4,14 @@ require 'guard/jasmine-headless-webkit/runner'
 
 module Guard
   class JasmineHeadlessWebkit < Guard
+    DEFAULT_EXTENSIONS = %w{js coffee}
+
     def initialize(watchers = [], options = {})
       super
       @options = {
         :all_on_start => true,
-        :run_before => false
+        :run_before => false,
+        :valid_extensions => DEFAULT_EXTENSIONS
       }.merge(options)
     end
 
@@ -23,6 +26,7 @@ module Guard
     end
 
     def run_on_change(paths)
+      paths = filter_paths(paths)
       @ran_jammit = false
       if run_before and run_jammit
         @ran_jammit = true
@@ -35,6 +39,14 @@ module Guard
     end
 
     private
+    def filter_paths(paths)
+      paths.find_all { |path| File.extname(path)[valid_extensions] }
+    end
+
+    def valid_extensions
+      %r{\.(#{@options[:valid_extensions].join('|')})$}
+    end
+
     def run_before
       if @options[:run_before]
         run_program(@options[:run_before])
@@ -61,6 +73,7 @@ module Guard
 
   class Dsl
     def newest_js_file(path)
+      p binding
       Dir[path + '*.{js,coffee}'].sort { |left, right| File.mtime(right) <=> File.mtime(left) }.first
     end
   end
