@@ -44,6 +44,15 @@ describe Guard::JasmineHeadlessWebkit do
         guard.run_on_change(%w{test})
       end
     end
+
+    context 'no files given, just run all' do
+      it 'should run all but not run once' do
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).never
+        guard.expects(:run_all).once
+
+        guard.run_on_change([])
+      end
+    end
   end
 
   context 'with run_before' do
@@ -97,7 +106,7 @@ describe Guard::JasmineHeadlessWebkit do
       let(:options) { { :jammit => true } }
 
       it "should run jammit only once" do
-        guard.run_on_change([])
+        guard.run_on_change(%w{path.txt})
       end
     end
   end

@@ -26,7 +26,11 @@ module Guard
       @ran_jammit = false
       if run_before and run_jammit
         @ran_jammit = true
-        run_all if JasmineHeadlessWebkitRunner.run(paths) == 0
+        do_run_all = true
+        if !paths.empty?
+          do_run_all = (JasmineHeadlessWebkitRunner.run(paths) == 0)
+        end
+        run_all if do_run_all
       end
     end
 
