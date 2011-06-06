@@ -1,5 +1,3 @@
-[![Build Status](http://travis-ci.org/johnbintz/guard-jasmine-headless-webkit.png)](http://travis-ci.org/johnbintz/guard-jamsine-headless-webkit)
-
 # Guard support for jasmine-headless-webkit
 
 Add running your Jasmine specs to your `Guardfile` via [`jasmine-headless-webkit`](http://github.com/johnbintz/jasmine-headless-webkit/). Nice!
