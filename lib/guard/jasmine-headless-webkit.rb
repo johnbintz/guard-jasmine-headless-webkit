@@ -73,7 +73,6 @@ module Guard
 
   class Dsl
     def newest_js_file(path)
-      p binding
       Dir[path + '*.{js,coffee}'].sort { |left, right| File.mtime(right) <=> File.mtime(left) }.first
     end
   end
