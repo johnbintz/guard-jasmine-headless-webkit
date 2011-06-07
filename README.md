@@ -17,7 +17,7 @@ home folder's `.jasmine-headless-webkit` file.
 * `:all_on_start => false` to not run everything when starting, just like `guard-rspec`.
 * `:run_before => "<command to run>` to run a command before running specs. If the command fails, the test run stops.
 * `:jammit => true` to run `jammit -f 2>/dev/null` before the tests for the current file change are run.
-* `:valid_extensions => %w{` to run `jammit -f 2>/dev/null` before the tests for the current file change are run.
+* `:valid_extensions => %w{js coffee}` to only trigger `run_on_change` events for files with these extensions. Forces Guard to re-run all tests when any other matched file changes.
 
 ## What's the deal with `newest_js_file`?
 
