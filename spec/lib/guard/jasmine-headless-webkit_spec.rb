@@ -69,6 +69,7 @@ describe Guard::JasmineHeadlessWebkit do
       before do
         Guard::JasmineHeadlessWebkitRunner.expects(:run).never
         Guard::UI.expects(:info).with(regexp_matches(/false/))
+        Guard::UI.expects(:info).with(regexp_matches(/running all/))
       end
 
       let(:options) { { :run_before => 'false' } }
@@ -82,6 +83,7 @@ describe Guard::JasmineHeadlessWebkit do
       before do
         Guard::JasmineHeadlessWebkitRunner.expects(:run).once
         Guard::UI.expects(:info).with(regexp_matches(/true/))
+        Guard::UI.expects(:info).with(regexp_matches(/running all/))
       end
 
       let(:options) { { :run_before => 'true' } }

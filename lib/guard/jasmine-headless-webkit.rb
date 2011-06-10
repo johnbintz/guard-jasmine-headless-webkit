@@ -21,6 +21,7 @@ module Guard
     end
 
     def run_all
+      UI.info "Guard::JasmineHeadlessWebkit running all specs..."
       JasmineHeadlessWebkitRunner.run if run_before and run_jammit
       @ran_jammit = false
     end
@@ -31,6 +32,7 @@ module Guard
       if run_before and run_jammit
         @ran_jammit = true
         if !paths.empty?
+          UI.info "Guard::JasmineHeadlessWebkit running the following: #{paths.join(' ')}"
           JasmineHeadlessWebkitRunner.run(paths)
         else
           run_all
