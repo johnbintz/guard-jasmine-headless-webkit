@@ -36,10 +36,10 @@ describe Guard::JasmineHeadlessWebkit do
       end
     end
 
-    context 'succeed, run all' do
+    context 'succeed, but still do not run all' do
       it "should run all" do
         Guard::JasmineHeadlessWebkitRunner.expects(:run).returns(0)
-        guard.expects(:run_all).once
+        guard.expects(:run_all).never
 
         guard.run_on_change(%w{test.js})
       end
@@ -109,7 +109,7 @@ describe Guard::JasmineHeadlessWebkit do
     context 'only run once if run_on_change is successful' do
       before do
         guard.expects(:run_program).once.returns(true)
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).twice.returns(0)
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).once.returns(0)
       end
 
       let(:options) { { :jammit => true } }
