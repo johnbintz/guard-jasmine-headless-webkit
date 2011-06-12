@@ -22,15 +22,15 @@ module Guard
 
     def run_all
       UI.info "Guard::JasmineHeadlessWebkit running all specs..."
-      JasmineHeadlessWebkitRunner.run if run_before and run_jammit
-      @ran_jammit = false
+      JasmineHeadlessWebkitRunner.run if run_before and run_rails_assets and run_jammit
+      @ran_before = false
     end
 
     def run_on_change(paths)
       paths = filter_paths(paths)
-      @ran_jammit = false
-      if run_before and run_jammit
-        @ran_jammit = true
+      @ran_before = false
+      if run_before and run_rails_assets and run_jammit
+        @ran_before = true
         if !paths.empty?
           UI.info "Guard::JasmineHeadlessWebkit running the following: #{paths.join(' ')}"
           JasmineHeadlessWebkitRunner.run(paths)
@@ -50,16 +50,20 @@ module Guard
     end
 
     def run_before
-      if @options[:run_before]
-        run_program(@options[:run_before])
-      else
-        true
-      end
+      run_a_thing_before(:run_before, @options[:run_before])
     end
 
     def run_jammit
-      if @options[:jammit] && !@ran_jammit
-        run_program("Jammit", %{jammit -f 2>/dev/null})
+      run_a_thing_before(:jammit, "Jammit", %{jammit -f 2>/dev/null})
+    end
+
+    def run_rails_assets
+      run_a_thing_before(:rails_assets, "Rails Assets", %{rake assets:precompile:for_testing})
+    end
+
+    def run_a_thing_before(option, *args)
+      if @options[option] && !@ran_before
+        run_program(*args)
       else
         true
       end
