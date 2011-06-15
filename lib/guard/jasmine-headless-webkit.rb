@@ -54,6 +54,7 @@ module Guard
     end
 
     def run_jammit
+      $stderr.puts "Jammit support is deprecated and will be removed in the future. Use guard-jammit instead." if @options[:jammit]
       run_a_thing_before(:jammit, "Jammit", %{jammit -f 2>/dev/null})
     end
 
