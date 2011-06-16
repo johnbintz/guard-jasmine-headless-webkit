@@ -1,4 +1,5 @@
 require 'guard/notifier'
+require 'jasmine/headless/runner'
 
 module Guard
   class JasmineHeadlessWebkitRunner
@@ -7,7 +8,7 @@ module Guard
         file = Tempfile.new('guard-jasmine-headless-webkit')
         file.close
 
-        system %{jasmine-headless-webkit --report #{file.path} -c #{paths.join(" ")}}
+        Jasmine::Headless::Runner.run(:report => file.path, :colors => true, :files => paths)
 
         notify(file.path)
       end
