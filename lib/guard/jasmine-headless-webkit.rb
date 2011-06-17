@@ -24,10 +24,11 @@ module Guard
       UI.info "Guard::JasmineHeadlessWebkit running all specs..."
       JasmineHeadlessWebkitRunner.run if run_all_things_before
       @ran_before = false
+    rescue CoffeeScript::CompilationError
     rescue StandardError => e
       puts e.message
       puts e.backtrace.join("\n")
-      raise e
+      puts
     end
 
     def run_on_change(paths)
@@ -42,10 +43,11 @@ module Guard
           run_all
         end
       end
+    rescue CoffeeScript::CompilationError
     rescue StandardError => e
       puts e.message
       puts e.backtrace.join("\n")
-      raise e
+      puts
     end
 
     private
