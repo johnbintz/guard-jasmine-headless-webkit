@@ -24,6 +24,10 @@ module Guard
       UI.info "Guard::JasmineHeadlessWebkit running all specs..."
       JasmineHeadlessWebkitRunner.run if run_all_things_before
       @ran_before = false
+    rescue StandardError => e
+      puts e.message
+      puts e.backtrace.join("\n")
+      raise e
     end
 
     def run_on_change(paths)
@@ -38,6 +42,10 @@ module Guard
           run_all
         end
       end
+    rescue StandardError => e
+      puts e.message
+      puts e.backtrace.join("\n")
+      raise e
     end
 
     private
