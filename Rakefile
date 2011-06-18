@@ -1,6 +1,8 @@
 require 'bundler'
 Bundler::GemHelper.install_tasks
 
+include Rake::DSL if defined?(Rake::DSL)
+
 desc 'Push everywhere!'
 task :push_everywhere do
   system %{git push origin master}
