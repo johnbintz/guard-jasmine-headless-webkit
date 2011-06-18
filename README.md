@@ -15,7 +15,6 @@ home folder's `.jasmine-headless-webkit` file.
 ## `guard` options
 
 * `:all_on_start => false` to not run everything when starting, just like `guard-rspec`.
-* `:rails_assets => true` to repackage Rails assets before each run.
 * `:run_before => "<command to run>"` to run a command before running specs. If the command fails, the test run stops.
 * `:valid_extensions => %w{js coffee}` to only trigger `run_on_change` events for files with these extensions. Forces Guard to re-run all tests when any other matched file changes.
 
@@ -23,6 +22,28 @@ home folder's `.jasmine-headless-webkit` file.
 
 * `:jammit => true` to run `jammit -f 2>/dev/null` before the tests for the current file change are run.
   * Use [guard-jammit](http://github.com/guard/guard-jammit) instead.
+* `:rails_assets => true` to repackage Rails assets before each run.
+  * Use [
+
+## Using with Rails 3.1 and the Asset Pipeline and/or Jammit
+
+Use [`guard-rails-assets`](https://github.com/dnagir/guard-rails-assets) chained in before `guard-jasmine-headless-webkit` to precompile your application
+code for testing:
+
+    guard 'rails-assets' do
+      watch(%r{^app/assets/javascripts/.*})
+    end
+
+    guard 'jasmine-headless-webkit' do
+      watch(%r{^public/assets/.*\.js})
+      ... specs ...
+    end
+
+Do the same for Jammit, using [`guard-jammit`](http://github.com/guard/guard-jammit).
+
+### `guard-jammit` and Jammit >= 0.6.0
+
+Jammit >= 0.6.0 changed how it determines the Rails environment. Use [my fork of `guard-jammit`](http://github.com/johnbintz/guard-jammit) until it's fixed upstream.
 
 ## What's the deal with `newest_js_file`?
 
