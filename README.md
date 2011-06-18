@@ -21,9 +21,9 @@ home folder's `.jasmine-headless-webkit` file.
 ### Deprecated options
 
 * `:jammit => true` to run `jammit -f 2>/dev/null` before the tests for the current file change are run.
-  * Use [guard-jammit](http://github.com/guard/guard-jammit) instead.
+  * Use [`guard-jammit`](http://github.com/guard/guard-jammit) instead.
 * `:rails_assets => true` to repackage Rails assets before each run.
-  * Use [
+  * Use [`guard-rails-assets`](http://github.com/dnagir/guard-rails-assets) instead.
 
 ## Using with Rails 3.1 and the Asset Pipeline and/or Jammit
 
