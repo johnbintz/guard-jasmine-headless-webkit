@@ -22,33 +22,27 @@ module Guard
     end
 
     def run_all
-      UI.info "Guard::JasmineHeadlessWebkit running all specs..."
-      JasmineHeadlessWebkitRunner.run if run_all_things_before
-      @ran_before = false
-    rescue ::CoffeeScript::CompilationError
-    rescue StandardError => e
-      puts e.message
-      puts e.backtrace.join("\n")
-      puts
+      run_something_and_rescue do
+        UI.info "Guard::JasmineHeadlessWebkit running all specs..."
+        JasmineHeadlessWebkitRunner.run if run_all_things_before
+        @ran_before = false
+      end
     end
 
     def run_on_change(paths)
-      paths = filter_paths(paths)
-      @ran_before = false
-      if run_all_things_before
-        @ran_before = true
-        if !paths.empty?
-          UI.info "Guard::JasmineHeadlessWebkit running the following: #{paths.join(' ')}"
-          JasmineHeadlessWebkitRunner.run(paths)
-        else
-          run_all
+      run_something_and_rescue do
+        paths = filter_paths(paths)
+        @ran_before = false
+        if run_all_things_before
+          @ran_before = true
+          if !paths.empty?
+            UI.info "Guard::JasmineHeadlessWebkit running the following: #{paths.join(' ')}"
+            JasmineHeadlessWebkitRunner.run(paths)
+          else
+            run_all
+          end
         end
       end
-    rescue ::CoffeeScript::CompilationError
-    rescue StandardError => e
-      puts e.message
-      puts e.backtrace.join("\n")
-      puts
     end
 
     private
@@ -90,6 +84,15 @@ module Guard
       UI.info "Guard::JasmineHeadlessWebkit running #{name}..."
       system command
       $?.exitstatus == 0
+    end
+
+    def run_something_and_rescue
+      yield
+    rescue ::CoffeeScript::CompilationError
+    rescue StandardError => e
+      puts e.message
+      puts e.backtrace.join("\n")
+      puts
     end
   end
 
