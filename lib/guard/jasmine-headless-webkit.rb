@@ -1,6 +1,7 @@
 require 'guard'
 require 'guard/guard'
 require 'guard/jasmine-headless-webkit/runner'
+require 'coffee-script'
 
 module Guard
   class JasmineHeadlessWebkit < Guard
