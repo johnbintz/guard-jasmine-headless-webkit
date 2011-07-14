@@ -22,6 +22,16 @@ describe Guard::JasmineHeadlessWebkitRunner do
       end
     end
 
+    context 'with failures' do
+      let(:data) { "1/0/F/5\nThis||Is||A||Failure\n" }
+
+      it 'should notify with the right information' do
+        Guard::Notifier.expects(:notify).with("1 test, 0 failures, 5 secs.", { :title => 'Jasmine results', :image => :success })
+
+        Guard::JasmineHeadlessWebkitRunner.notify(file)
+      end
+    end
+
     context 'system run interrupted' do
       let(:data) { '' }
 

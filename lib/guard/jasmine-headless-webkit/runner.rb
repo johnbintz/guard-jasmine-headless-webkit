@@ -17,7 +17,7 @@ module Guard
         if (data = File.read(file).strip).empty?
           Notifier.notify('Spec runner interrupted!', :title => 'Jasmine results', :image => :failed)
         else
-          total, fails, any_console, secs = File.read(file).strip.split('/')
+          total, fails, any_console, secs = data.lines.first.strip.split('/')
 
           Notifier.notify(message(total, fails, secs, any_console == "T"), :title => 'Jasmine results', :image => image(any_console == "T", fails))
           fails.to_i
