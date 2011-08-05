@@ -27,6 +27,15 @@ describe Guard::JasmineHeadlessWebkit do
   end
 
   describe '#run_on_change' do
+    context 'two files' do
+      it "should only run one" do
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(%w{test.js}).returns(1)
+        guard.expects(:run_all).never
+
+        guard.run_on_change(%w{test.js test.js})
+      end
+    end
+
     context 'jhw call fails' do
       it "should not run all" do
         Guard::JasmineHeadlessWebkitRunner.expects(:run).returns(1)
@@ -90,62 +99,6 @@ describe Guard::JasmineHeadlessWebkit do
 
       it "should run the command first" do
         guard.run_all
-      end
-    end
-  end
-
-  describe 'run jammit first' do
-    context 'run on run_all if called first' do
-      before do
-        guard.expects(:run_program).once.with('Jammit', regexp_matches(/jammit/)).returns(true)
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).once
-      end
-
-      let(:options) { { :jammit => true } }
-
-      it "should run jammit first" do
-        guard.run_all
-      end
-    end
-
-    context 'only run once if run_on_change is successful' do
-      before do
-        guard.expects(:run_program).once.with('Jammit', regexp_matches(/jammit/)).returns(true)
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).once.returns(0)
-      end
-
-      let(:options) { { :jammit => true } }
-
-      it "should run jammit only once" do
-        guard.run_on_change(%w{path.js})
-      end
-    end
-  end
-
-  describe 'run rails_assets first' do
-    context 'run on run_all if called first' do
-      before do
-        guard.expects(:run_program).with('Rails Assets', regexp_matches(/assets:precompile:for_testing/)).once.returns(true)
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).once
-      end
-
-      let(:options) { { :rails_assets => true } }
-
-      it "should run rails assets first" do
-        guard.run_all
-      end
-    end
-
-    context 'only run once if run_on_change is successful' do
-      before do
-        guard.expects(:run_program).with('Rails Assets', regexp_matches(/assets:precompile:for_testing/)).once.returns(true)
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).once.returns(0)
-      end
-
-      let(:options) { { :rails_assets => true } }
-
-      it "should run rails assets only once" do
-        guard.run_on_change(%w{path.js})
       end
     end
   end

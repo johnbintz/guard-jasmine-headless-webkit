@@ -47,7 +47,7 @@ module Guard
 
     private
     def filter_paths(paths)
-      paths.find_all { |path| File.extname(path)[valid_extensions] }
+      paths.find_all { |path| File.extname(path)[valid_extensions] }.uniq
     end
 
     def valid_extensions
@@ -56,15 +56,6 @@ module Guard
 
     def run_before
       run_a_thing_before(:run_before, @options[:run_before])
-    end
-
-    def run_jammit
-      $stderr.puts "Jammit support is deprecated and will be removed in the future. Use guard-jammit instead." if @options[:jammit]
-      run_a_thing_before(:jammit, "Jammit", %{jammit -f 2>/dev/null})
-    end
-
-    def run_rails_assets
-      run_a_thing_before(:rails_assets, "Rails Assets", %{rake assets:precompile:for_testing})
     end
 
     def run_a_thing_before(option, *args)
@@ -76,7 +67,7 @@ module Guard
     end
 
     def run_all_things_before
-      run_before and run_rails_assets and run_jammit
+      run_before
     end
 
     def run_program(name, command = nil)
