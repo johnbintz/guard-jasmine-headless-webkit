@@ -1,4 +1,5 @@
 require 'guard/notifier'
+require 'jasmine-headless-webkit'
 require 'jasmine/headless/runner'
 
 module Guard
