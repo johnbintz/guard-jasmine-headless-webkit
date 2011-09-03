@@ -1,5 +1,5 @@
 require 'guard/notifier'
-require 'jasmine/headless/runner'
+require 'jasmine-headless-webkit'
 
 module Guard
   class JasmineHeadlessWebkitRunner
@@ -14,14 +14,14 @@ module Guard
       end
 
       def notify(file)
-        if (data = File.read(file).strip).empty?
-          Notifier.notify('Spec runner interrupted!', :title => 'Jasmine results', :image => :failed)
+        if (report = Jasmine::Headless::Report.load(file)).valid?
+          Notifier.notify(message(report.total, report.failed, report.time, report.has_used_console?), :title => 'Jasmine results', :image => image(report.has_used_console?, report.failed))
+          report.failed
         else
-          total, fails, any_console, secs = data.lines.first.strip.split('/')
-
-          Notifier.notify(message(total, fails, secs, any_console == "T"), :title => 'Jasmine results', :image => image(any_console == "T", fails))
-          fails.to_i
+          raise StandardError.new("invalid report")
         end
+      rescue Exception => e
+        Notifier.notify('Spec runner interrupted!', :title => 'Jasmine results', :image => :failed)
       end
 
       private

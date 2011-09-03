@@ -20,5 +20,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency 'guard', '>= 0.4.0'
-  s.add_dependency 'jasmine-headless-webkit', '>= 0.3.0'
+  s.add_dependency 'jasmine-headless-webkit', '>= 0.7.0'
 end
+

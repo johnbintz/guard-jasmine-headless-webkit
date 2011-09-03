@@ -13,20 +13,20 @@ describe Guard::JasmineHeadlessWebkitRunner do
     end
 
     context 'system run not interrupted' do
-      let(:data) { '1/0/F/5' }
+      let(:data) { 'TOTAL||1||0||5||F' }
 
       it 'should notify with the right information' do
-        Guard::Notifier.expects(:notify).with("1 test, 0 failures, 5 secs.", { :title => 'Jasmine results', :image => :success })
+        Guard::Notifier.expects(:notify).with("1 test, 0 failures, 5.0 secs.", { :title => 'Jasmine results', :image => :success })
 
         Guard::JasmineHeadlessWebkitRunner.notify(file)
       end
     end
 
     context 'with failures' do
-      let(:data) { "1/0/F/5\nThis||Is||A||Failure\n" }
+      let(:data) { "TOTAL||1||1||5||F" }
 
       it 'should notify with the right information' do
-        Guard::Notifier.expects(:notify).with("1 test, 0 failures, 5 secs.", { :title => 'Jasmine results', :image => :success })
+        Guard::Notifier.expects(:notify).with("1 test, 1 failures, 5.0 secs.", { :title => 'Jasmine results', :image => :failed })
 
         Guard::JasmineHeadlessWebkitRunner.notify(file)
       end
