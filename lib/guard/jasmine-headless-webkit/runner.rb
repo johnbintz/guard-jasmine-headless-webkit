@@ -16,12 +16,14 @@ module Guard
       def notify(file)
         if (report = Jasmine::Headless::Report.load(file)).valid?
           Notifier.notify(message(report.total, report.failed, report.time, report.has_used_console?), :title => 'Jasmine results', :image => image(report.has_used_console?, report.failed))
-          report.failed
+          report.failed_files
         else
-          raise StandardError.new("invalid report")
+          raise Jasmine::Headless::InvalidReport.new
         end
-      rescue Exception => e
+      rescue Jasmine::Headless::InvalidReport => e
         Notifier.notify('Spec runner interrupted!', :title => 'Jasmine results', :image => :failed)
+      rescue Exception => e
+        p e
       end
 
       private

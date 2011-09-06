@@ -7,6 +7,8 @@ module Guard
   class JasmineHeadlessWebkit < Guard
     DEFAULT_EXTENSIONS = %w{js coffee}
 
+    attr_reader :files_to_rerun
+
     def initialize(watchers = [], options = {})
       super
       @options = {
@@ -14,11 +16,18 @@ module Guard
         :run_before => false,
         :valid_extensions => DEFAULT_EXTENSIONS
       }.merge(options)
+
+      @files_to_rerun = []
     end
 
     def start
       UI.info "Guard::JasmineHeadlessWebkit is running."
       run_all if @options[:all_on_start]
+    end
+
+    def reload
+      @files_to_rerun = []
+      UI.info "Resetting Guard::JasmineHeadlessWebkit failed files..."
     end
 
     def run_all
@@ -36,8 +45,11 @@ module Guard
         if run_all_things_before
           @ran_before = true
           if !paths.empty?
+            paths = (paths + @files_to_rerun).uniq
             UI.info "Guard::JasmineHeadlessWebkit running the following: #{paths.join(' ')}"
-            JasmineHeadlessWebkitRunner.run(paths)
+            if failed_files = JasmineHeadlessWebkitRunner.run(paths)
+              @files_to_rerun = failed_files
+            end
           else
             run_all
           end

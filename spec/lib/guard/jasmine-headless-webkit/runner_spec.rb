@@ -18,17 +18,20 @@ describe Guard::JasmineHeadlessWebkitRunner do
       it 'should notify with the right information' do
         Guard::Notifier.expects(:notify).with("1 test, 0 failures, 5.0 secs.", { :title => 'Jasmine results', :image => :success })
 
-        Guard::JasmineHeadlessWebkitRunner.notify(file)
+        Guard::JasmineHeadlessWebkitRunner.notify(file).should == []
       end
     end
 
     context 'with failures' do
-      let(:data) { "TOTAL||1||1||5||F" }
+      let(:data) { <<-REPORT }
+FAIL||Test||Two||file.js:50
+TOTAL||1||1||5||F
+REPORT
 
       it 'should notify with the right information' do
         Guard::Notifier.expects(:notify).with("1 test, 1 failures, 5.0 secs.", { :title => 'Jasmine results', :image => :failed })
 
-        Guard::JasmineHeadlessWebkitRunner.notify(file)
+        Guard::JasmineHeadlessWebkitRunner.notify(file).should == [ 'file.js' ]
       end
     end
 
@@ -38,7 +41,7 @@ describe Guard::JasmineHeadlessWebkitRunner do
       it 'should notify failure' do
         Guard::Notifier.expects(:notify).with("Spec runner interrupted!", { :title => 'Jasmine results', :image => :failed })
 
-        Guard::JasmineHeadlessWebkitRunner.notify(file)
+        Guard::JasmineHeadlessWebkitRunner.notify(file).should be_nil
       end
     end
   end

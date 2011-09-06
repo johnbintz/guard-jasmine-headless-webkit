@@ -27,30 +27,52 @@ describe Guard::JasmineHeadlessWebkit do
   end
 
   describe '#run_on_change' do
+    let(:one_file) { %w{test.js} }
+
     context 'two files' do
       it "should only run one" do
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(%w{test.js}).returns(1)
-        guard.expects(:run_all).never
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(one_file).returns(one_file)
 
         guard.run_on_change(%w{test.js test.js})
+        guard.files_to_rerun.should == one_file
       end
     end
 
-    context 'jhw call fails' do
+    context 'one file no priors' do
       it "should not run all" do
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).returns(1)
-        guard.expects(:run_all).never
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).returns(one_file)
 
-        guard.run_on_change(%w{test.js})
+        guard.run_on_change(one_file)
+        guard.files_to_rerun.should == one_file
+      end
+    end
+
+    context 'one file one prior' do
+      it "should not run all" do
+        guard.instance_variable_set(:@files_to_rerun, [ "two.js" ])
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(one_file + [ "two.js" ]).returns(one_file)
+
+        guard.run_on_change(one_file)
+        guard.files_to_rerun.should == one_file
+      end
+    end
+
+    context 'failed hard' do
+      it "should not run all" do
+        guard.instance_variable_set(:@files_to_rerun, one_file)
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(one_file).returns(nil)
+
+        guard.run_on_change(one_file)
+        guard.files_to_rerun.should == one_file
       end
     end
 
     context 'succeed, but still do not run all' do
       it "should run all" do
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).returns(0)
-        guard.expects(:run_all).never
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).returns([])
 
-        guard.run_on_change(%w{test.js})
+        guard.run_on_change(one_file)
+        guard.files_to_rerun.should == []
       end
     end
 
@@ -60,6 +82,7 @@ describe Guard::JasmineHeadlessWebkit do
         guard.expects(:run_all).once
 
         guard.run_on_change([])
+        guard.files_to_rerun.should == []
       end
     end
 
@@ -69,6 +92,7 @@ describe Guard::JasmineHeadlessWebkit do
         guard.expects(:run_all).once
 
         guard.run_on_change(%w{test.jst})
+        guard.files_to_rerun.should == []
       end
     end
   end
@@ -100,6 +124,16 @@ describe Guard::JasmineHeadlessWebkit do
       it "should run the command first" do
         guard.run_all
       end
+    end
+  end
+
+  describe '#reload' do
+    it 'should reset the state of the files_to_rerun' do
+      Guard::UI.expects(:info).with(regexp_matches(/Resetting/))
+
+      guard.instance_variable_set(:@files_to_rerun, "test")
+      guard.reload
+      guard.files_to_rerun.should == []
     end
   end
 end
