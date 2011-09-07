@@ -7,6 +7,9 @@ module Guard
   class JasmineHeadlessWebkit < Guard
     DEFAULT_EXTENSIONS = %w{js coffee}
 
+    ALL_SPECS_MESSAGE = "Guard::JasmineHeadlessWebkit running all specs..."
+    SOME_SPECS_MESSAGE = "Guard::JasmineHeadlessWebkit running the following: %s"
+
     attr_reader :files_to_rerun
 
     def initialize(watchers = [], options = {})
@@ -16,6 +19,8 @@ module Guard
         :run_before => false,
         :valid_extensions => DEFAULT_EXTENSIONS
       }.merge(options)
+
+      UI.deprecation ":run_before is deprecated. Use guard-shell to do something beforehand. This will be removed in a future release." if @options[:run_before]
 
       @files_to_rerun = []
     end
@@ -32,9 +37,9 @@ module Guard
 
     def run_all
       run_something_and_rescue do
-        UI.info "Guard::JasmineHeadlessWebkit running all specs..."
-        JasmineHeadlessWebkitRunner.run if run_all_things_before
         @ran_before = false
+
+        run_for_failed_files if run_all_things_before
       end
     end
 
@@ -46,10 +51,8 @@ module Guard
           @ran_before = true
           if !paths.empty?
             paths = (paths + @files_to_rerun).uniq
-            UI.info "Guard::JasmineHeadlessWebkit running the following: #{paths.join(' ')}"
-            if failed_files = JasmineHeadlessWebkitRunner.run(paths)
-              @files_to_rerun = failed_files
-            end
+
+            run_for_failed_files(paths)
           else
             run_all
           end
@@ -58,6 +61,20 @@ module Guard
     end
 
     private
+    def run_for_failed_files(paths = [])
+      if paths.empty?
+        UI.info(ALL_SPECS_MESSAGE)
+      else
+        UI.info(SOME_SPECS_MESSAGE % paths.join(' '))
+      end
+
+      if failed_files = JasmineHeadlessWebkitRunner.run(paths)
+        @files_to_rerun = failed_files
+      end
+
+      failed_files && failed_files.empty?
+    end
+
     def filter_paths(paths)
       paths.find_all { |path| File.extname(path)[valid_extensions] }.uniq
     end
@@ -93,9 +110,13 @@ module Guard
       yield
     rescue ::CoffeeScript::CompilationError
     rescue StandardError => e
-      puts e.message
-      puts e.backtrace.join("\n")
-      puts
+      if ENV['GUARD_ENV'] == 'test'
+        raise e
+      else
+        puts e.message
+        puts e.backtrace.join("\n")
+        puts
+      end
     end
   end
 

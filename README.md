@@ -15,8 +15,10 @@ home folder's `.jasmine-headless-webkit` file.
 ## `guard` options
 
 * `:all_on_start => false` to not run everything when starting, just like `guard-rspec`.
-* `:run_before => "<command to run>"` to run a command before running specs. If the command fails, the test run stops.
 * `:valid_extensions => %w{js coffee}` to only trigger `run_on_change` events for files with these extensions. Forces Guard to re-run all tests when any other matched file changes.
+
+### Deprecated options
+* `:run_before => "<command to run>"` to run a command before running specs. If the command fails, the test run stops.
 
 ## Using with Rails 3.1 and the Asset Pipeline and/or Jammit
 

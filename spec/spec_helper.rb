@@ -5,6 +5,8 @@ RSpec.configure do |config|
   config.mock_with :mocha
 end
 
+ENV['GUARD_ENV'] = 'test'
+
 module Guard
   module UI
     class << self
