@@ -4,11 +4,13 @@ require 'jasmine-headless-webkit'
 module Guard
   class JasmineHeadlessWebkitRunner
     class << self
-      def run(paths = [])
+      def run(paths = [], options = {})
         file = Tempfile.new('guard-jasmine-headless-webkit')
         file.close
 
-        Jasmine::Headless::Runner.run(:report => file.path, :colors => true, :files => paths)
+        options.merge!(:report => file.path, :colors => true, :files => paths)
+
+        Jasmine::Headless::Runner.run(options)
 
         notify(file.path)
       end

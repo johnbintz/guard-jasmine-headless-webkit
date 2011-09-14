@@ -12,13 +12,18 @@ module Guard
 
     attr_reader :files_to_rerun
 
+    DEFAULT_OPTIONS = {
+      :all_on_start => true,
+      :run_before => false,
+      :valid_extensions => DEFAULT_EXTENSIONS
+    }
+
     def initialize(watchers = [], options = {})
       super
-      @options = {
-        :all_on_start => true,
-        :run_before => false,
-        :valid_extensions => DEFAULT_EXTENSIONS
-      }.merge(options)
+
+      @options = DEFAULT_OPTIONS.merge(options)
+      @filtered_options = options
+      DEFAULT_OPTIONS.keys.each { |key| @filtered_options.delete(key) }
 
       UI.deprecation ":run_before is deprecated. Use guard-shell to do something beforehand. This will be removed in a future release." if @options[:run_before]
 
@@ -68,7 +73,7 @@ module Guard
         UI.info(SOME_SPECS_MESSAGE % paths.join(' '))
       end
 
-      if failed_files = JasmineHeadlessWebkitRunner.run(paths)
+      if failed_files = JasmineHeadlessWebkitRunner.run(paths, @filtered_options)
         @files_to_rerun = failed_files
       end
 

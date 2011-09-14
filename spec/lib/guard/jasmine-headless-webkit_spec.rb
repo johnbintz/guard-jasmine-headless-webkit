@@ -57,6 +57,16 @@ describe Guard::JasmineHeadlessWebkit do
         guard.files_to_rerun.should == []
       end
     end
+
+    context 'pass along jhw options' do
+      let(:options) { { :all_on_start => false, :full_run => false } }
+
+      it 'should only pass along jhw options' do
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).with([], :full_run => false)
+
+        guard.run_all
+      end
+    end
   end
 
   describe '#run_on_change' do
@@ -64,7 +74,7 @@ describe Guard::JasmineHeadlessWebkit do
 
     context 'two files' do
       it "should only run one" do
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(one_file).returns(one_file)
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(one_file, {}).returns(one_file)
 
         guard.run_on_change(%w{test.js test.js}).should be_false
         guard.files_to_rerun.should == one_file
@@ -83,7 +93,7 @@ describe Guard::JasmineHeadlessWebkit do
     context 'one file one prior' do
       it "should not run all" do
         guard.instance_variable_set(:@files_to_rerun, [ "two.js" ])
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(one_file + [ "two.js" ]).returns(one_file)
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(one_file + [ "two.js" ], {}).returns(one_file)
 
         guard.run_on_change(one_file).should be_false
         guard.files_to_rerun.should == one_file
@@ -93,7 +103,7 @@ describe Guard::JasmineHeadlessWebkit do
     context 'failed hard' do
       it "should not run all" do
         guard.instance_variable_set(:@files_to_rerun, one_file)
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(one_file).returns(nil)
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(one_file, {}).returns(nil)
 
         guard.run_on_change(one_file).should be_false
         guard.files_to_rerun.should == one_file

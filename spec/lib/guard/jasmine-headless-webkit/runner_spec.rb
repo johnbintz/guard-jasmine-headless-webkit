@@ -3,6 +3,14 @@ require 'guard/jasmine-headless-webkit/runner'
 require 'fakefs/spec_helpers'
 
 describe Guard::JasmineHeadlessWebkitRunner do
+  describe '.run' do
+    it 'should pass along options' do
+      Jasmine::Headless::Runner.expects(:run).with(has_key(:full_run))
+
+      Guard::JasmineHeadlessWebkitRunner.run([], :full_run => false)
+    end
+  end
+
   describe '.notify' do
     include FakeFS::SpecHelpers
 
