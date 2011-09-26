@@ -72,12 +72,10 @@ module Guard
       else
         UI.info(SOME_SPECS_MESSAGE % paths.join(' '))
       end
-
-      if failed_files = JasmineHeadlessWebkitRunner.run(paths, @filtered_options)
-        @files_to_rerun = failed_files
-      end
-
-      failed_files && failed_files.empty?
+      failed_files = JasmineHeadlessWebkitRunner.run(paths, @filtered_options)
+      @files_to_rerun = failed_files || paths
+      
+      failed_files && @files_to_rerun.empty?
     end
 
     def filter_paths(paths)

@@ -49,7 +49,7 @@ REPORT
       it 'should notify failure' do
         Guard::Notifier.expects(:notify).with("Spec runner interrupted!", { :title => 'Jasmine results', :image => :failed })
 
-        Guard::JasmineHeadlessWebkitRunner.notify(file).should be_nil
+        Guard::JasmineHeadlessWebkitRunner.notify(file).should be_false
       end
     end
   end

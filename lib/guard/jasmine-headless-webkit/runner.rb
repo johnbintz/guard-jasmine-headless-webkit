@@ -24,6 +24,7 @@ module Guard
         end
       rescue Jasmine::Headless::InvalidReport => e
         Notifier.notify('Spec runner interrupted!', :title => 'Jasmine results', :image => :failed)
+        false
       rescue Exception => e
         p e
       end
