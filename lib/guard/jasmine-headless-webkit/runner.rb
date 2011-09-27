@@ -20,13 +20,11 @@ module Guard
           Notifier.notify(message(report.total, report.failed, report.time, report.has_used_console?), :title => 'Jasmine results', :image => image(report.has_used_console?, report.failed))
           report.failed_files
         else
-          raise Jasmine::Headless::InvalidReport.new
+          raise Jasmine::Headless::InvalidReport
         end
       rescue Jasmine::Headless::InvalidReport => e
         Notifier.notify('Spec runner interrupted!', :title => 'Jasmine results', :image => :failed)
         false
-      rescue Exception => e
-        p e
       end
 
       private

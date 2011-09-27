@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'guard/jasmine-headless-webkit'
+require 'fakefs/spec_helpers'
 
 describe Guard::JasmineHeadlessWebkit do
   let(:guard) { Guard::JasmineHeadlessWebkit.new([], options) }
@@ -70,11 +71,26 @@ describe Guard::JasmineHeadlessWebkit do
   end
 
   describe '#run_on_change' do
+    include FakeFS::SpecHelpers
+
     let(:one_file) { %w{test.js} }
+
+    def absolute(file)
+      case file
+      when Array
+        file.collect { |f| absolute(f) }
+      else
+        File.expand_path(file)
+      end
+    end
+
+    before do
+      File.open(one_file.first, 'wb')
+    end
 
     context 'two files' do
       it "should only run one" do
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(one_file, {}).returns(one_file)
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(absolute(one_file), {}).returns(one_file)
 
         guard.run_on_change(%w{test.js test.js}).should be_false
         guard.files_to_rerun.should == one_file
@@ -93,7 +109,7 @@ describe Guard::JasmineHeadlessWebkit do
     context 'one file one prior' do
       it "should not run all" do
         guard.instance_variable_set(:@files_to_rerun, [ "two.js" ])
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(one_file + [ "two.js" ], {}).returns(one_file)
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(absolute(one_file) + [ "two.js" ], {}).returns(one_file)
 
         guard.run_on_change(one_file).should be_false
         guard.files_to_rerun.should == one_file
@@ -102,11 +118,11 @@ describe Guard::JasmineHeadlessWebkit do
 
     context 'failed hard' do
       it "should not run all" do
-        guard.instance_variable_set(:@files_to_rerun, one_file)
-        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(one_file, {}).returns(nil)
+        guard.instance_variable_set(:@files_to_rerun, absolute(one_file))
+        Guard::JasmineHeadlessWebkitRunner.expects(:run).with(absolute(one_file), {}).returns(false)
 
         guard.run_on_change(one_file).should be_false
-        guard.files_to_rerun.should == one_file
+        guard.files_to_rerun.should == absolute(one_file)
       end
     end
 
@@ -136,6 +152,31 @@ describe Guard::JasmineHeadlessWebkit do
 
         guard.run_on_change(%w{test.jst})
         guard.files_to_rerun.should == []
+      end
+    end
+
+    context 'glob given' do
+      let(:files) { %w{file1.js file2.js other.js} }
+
+      before do
+        files.each { |file| File.open(file, 'wb') }
+      end
+
+      context 'not a duplicate' do
+        it 'should expand the glob' do
+          Guard::JasmineHeadlessWebkitRunner.expects(:run).with(absolute(%w{file1.js file2.js}), {}).returns(false)
+
+          guard.run_on_change(%w{file*.js})
+        end
+      end
+
+      context 'a duplicate' do
+        it 'should expand the glob and uniq' do
+          guard.instance_variable_set(:@files_to_rerun, absolute(%w{file1.js}))
+          Guard::JasmineHeadlessWebkitRunner.expects(:run).with(absolute(%w{file1.js file2.js}), {}).returns(false)
+
+          guard.run_on_change(%w{file*.js})
+        end
       end
     end
   end
