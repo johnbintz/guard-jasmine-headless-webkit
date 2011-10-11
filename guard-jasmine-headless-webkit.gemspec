@@ -1,10 +1,8 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "guard/jasmine-headless-webkit/version"
 
 Gem::Specification.new do |s|
   s.name        = "guard-jasmine-headless-webkit"
-  s.version     = Guard::JasmineHeadlessWebkitVersion::VERSION
+  s.version     = '0.3.2'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["John Bintz"]
   s.email       = ["john@coswellproductions.com"]
@@ -19,7 +17,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency 'guard', '>= 0.4.0'
-  s.add_dependency 'jasmine-headless-webkit', '>= 0.7.0'
+  s.add_runtime_dependency 'guard', '>= 0.4.0'
+  s.add_runtime_dependency 'jasmine-headless-webkit', '>= 0.7.0'
 end
 

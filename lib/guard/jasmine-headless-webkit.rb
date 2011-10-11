@@ -1,10 +1,11 @@
 require 'guard'
 require 'guard/guard'
-require 'guard/jasmine-headless-webkit/runner'
 require 'coffee-script'
 
 module Guard
   class JasmineHeadlessWebkit < Guard
+    autoload :Runner,  'guard/jasmine-headless-webkit/runner'
+
     DEFAULT_EXTENSIONS = %w{js coffee}
 
     ALL_SPECS_MESSAGE = "Guard::JasmineHeadlessWebkit running all specs..."
@@ -72,7 +73,7 @@ module Guard
       else
         UI.info(SOME_SPECS_MESSAGE % paths.join(' '))
       end
-      failed_files = JasmineHeadlessWebkitRunner.run(paths, @filtered_options)
+      failed_files = Runner.run(paths, @filtered_options)
       @files_to_rerun = failed_files || paths
       
       failed_files && @files_to_rerun.empty?

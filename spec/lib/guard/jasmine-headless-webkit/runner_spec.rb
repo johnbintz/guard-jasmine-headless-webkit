@@ -1,13 +1,11 @@
 require 'spec_helper'
-require 'guard/jasmine-headless-webkit/runner'
-require 'fakefs/spec_helpers'
 
-describe Guard::JasmineHeadlessWebkitRunner do
+describe Guard::JasmineHeadlessWebkit::Runner do
   describe '.run' do
     it 'should pass along options' do
       Jasmine::Headless::Runner.expects(:run).with(has_key(:full_run))
 
-      Guard::JasmineHeadlessWebkitRunner.run([], :full_run => false)
+      Guard::JasmineHeadlessWebkit::Runner.run([], :full_run => false)
     end
   end
 
@@ -26,7 +24,7 @@ describe Guard::JasmineHeadlessWebkitRunner do
       it 'should notify with the right information' do
         Guard::Notifier.expects(:notify).with("1 test, 0 failures, 5.0 secs.", { :title => 'Jasmine results', :image => :success })
 
-        Guard::JasmineHeadlessWebkitRunner.notify(file).should == []
+        Guard::JasmineHeadlessWebkit::Runner.notify(file).should == []
       end
     end
 
@@ -39,7 +37,7 @@ REPORT
       it 'should notify with the right information' do
         Guard::Notifier.expects(:notify).with("1 test, 1 failures, 5.0 secs.", { :title => 'Jasmine results', :image => :failed })
 
-        Guard::JasmineHeadlessWebkitRunner.notify(file).should == [ 'file.js' ]
+        Guard::JasmineHeadlessWebkit::Runner.notify(file).should == [ 'file.js' ]
       end
     end
 
@@ -49,7 +47,7 @@ REPORT
       it 'should notify failure' do
         Guard::Notifier.expects(:notify).with("Spec runner interrupted!", { :title => 'Jasmine results', :image => :failed })
 
-        Guard::JasmineHeadlessWebkitRunner.notify(file).should be_false
+        Guard::JasmineHeadlessWebkit::Runner.notify(file).should be_false
       end
     end
   end
