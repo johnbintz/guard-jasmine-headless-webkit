@@ -80,7 +80,7 @@ module Guard
     end
 
     def filter_paths(paths)
-      paths.collect { |path| Dir[path] }.flatten.find_all { |path| File.extname(path)[valid_extensions] }.uniq
+      paths.collect { |path| Dir[path] }.flatten.find_all { |path| File.extname(path)[valid_extensions] }.collect { |path| File.expand_path(path) }.uniq
     end
 
     def valid_extensions
