@@ -16,6 +16,7 @@ home folder's `.jasmine-headless-webkit` file.
 
 * `:all_on_start => false` to not run everything when starting, just like `guard-rspec`.
 * `:valid_extensions => %w{js coffee}` to only trigger `run_on_change` events for files with these extensions. Forces Guard to re-run all tests when any other matched file changes.
+* All other options from `Jasmine::Headless::Runner`: (see the [list of available options](https://github.com/johnbintz/jasmine-headless-webkit/blob/master/lib/jasmine/headless/options.rb#L11A))
 
 ### Deprecated options
 * `:run_before => "<command to run>"` to run a command before running specs. If the command fails, the test run stops.
