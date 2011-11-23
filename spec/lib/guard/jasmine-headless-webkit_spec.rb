@@ -23,15 +23,6 @@ describe Guard::JasmineHeadlessWebkit do
         guard.start
       end
     end
-
-    context 'run_before' do
-      let(:options) { { :run_before => true, :all_on_start => false } }
-
-      it "should warn about deprecation" do
-        Guard::UI.expects(:deprecation).at_least_once
-        guard.start
-      end
-    end
   end
 
   describe '#run_all' do
@@ -175,35 +166,6 @@ describe Guard::JasmineHeadlessWebkit do
 
           guard.run_on_change(%w{file*.js})
         end
-      end
-    end
-  end
-
-  context 'with run_before' do
-    context 'with failing command' do
-      before do
-        Guard::JasmineHeadlessWebkit::Runner.expects(:run).never
-        Guard::UI.expects(:info).with(regexp_matches(/false/))
-      end
-
-      let(:options) { { :run_before => 'false' } }
-
-      it "should run the command first" do
-        guard.run_all
-      end
-    end
-
-    context 'with succeeding command' do
-      before do
-        Guard::JasmineHeadlessWebkit::Runner.expects(:run).once
-        Guard::UI.expects(:info).with(regexp_matches(/true/))
-        Guard::UI.expects(:info).with(regexp_matches(/running all/))
-      end
-
-      let(:options) { { :run_before => 'true' } }
-
-      it "should run the command first" do
-        guard.run_all
       end
     end
   end

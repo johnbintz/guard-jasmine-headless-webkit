@@ -26,8 +26,6 @@ module Guard
       @filtered_options = options
       DEFAULT_OPTIONS.keys.each { |key| @filtered_options.delete(key) }
 
-      UI.deprecation ":run_before is deprecated. Use guard-shell to do something beforehand. This will be removed in a future release." if @options[:run_before]
-
       @files_to_rerun = []
     end
 
@@ -43,25 +41,18 @@ module Guard
 
     def run_all
       run_something_and_rescue do
-        @ran_before = false
-
-        run_for_failed_files if run_all_things_before
+        run_for_failed_files
       end
     end
 
     def run_on_change(paths)
       run_something_and_rescue do
-        paths = filter_paths(paths)
-        @ran_before = false
-        if run_all_things_before
-          @ran_before = true
-          if !paths.empty?
-            paths = (paths + @files_to_rerun).uniq
+        if !(paths = filter_paths(paths)).empty?
+          paths = (paths + @files_to_rerun).uniq
 
-            run_for_failed_files(paths)
-          else
-            run_all
-          end
+          run_for_failed_files(paths)
+        else
+          run_all
         end
       end
     end
@@ -75,7 +66,7 @@ module Guard
       end
       failed_files = Runner.run(paths, @filtered_options)
       @files_to_rerun = failed_files || paths
-      
+
       failed_files && @files_to_rerun.empty?
     end
 
@@ -85,22 +76,6 @@ module Guard
 
     def valid_extensions
       %r{\.(#{@options[:valid_extensions].join('|')})$}
-    end
-
-    def run_before
-      run_a_thing_before(:run_before, @options[:run_before])
-    end
-
-    def run_a_thing_before(option, *args)
-      if @options[option] && !@ran_before
-        run_program(*args)
-      else
-        true
-      end
-    end
-
-    def run_all_things_before
-      run_before
     end
 
     def run_program(name, command = nil)
