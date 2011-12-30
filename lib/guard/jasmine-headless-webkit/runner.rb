@@ -9,7 +9,10 @@ module Guard
           file = Tempfile.new('guard-jasmine-headless-webkit')
           file.close
 
-          options.merge!(:report => file.path, :colors => true, :files => paths)
+          options.merge!(:reporters => [
+            [ 'Console' ],
+            [ 'File', file.path ]
+          ], :colors => true, :files => paths)
 
           Jasmine::Headless::Runner.run(options)
 
