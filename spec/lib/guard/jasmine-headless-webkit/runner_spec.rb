@@ -2,11 +2,21 @@ require 'spec_helper'
 
 describe Guard::JasmineHeadlessWebkit::Runner do
   describe '.run' do
+    let(:reporter) { 'reporter' }
+
+    before do
+      described_class.stubs(:process_reporters).returns([ reporter ])
+    end
+
     it 'should pass along options' do
-      Jasmine::Headless::Runner.expects(:run).with(has_key(:full_run))
+      Jasmine::Headless::Runner.expects(:run).with(all_of(has_key(:full_run), has_entry(:reporters => [ reporter ])))
 
       Guard::JasmineHeadlessWebkit::Runner.run([], :full_run => false)
     end
+  end
+
+  describe '.process_reporters' do
+    subject { 
   end
 
   describe '.notify' do
