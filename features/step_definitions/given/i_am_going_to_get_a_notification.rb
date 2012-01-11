@@ -1,3 +1,3 @@
 Given /^I am going to get a notification file$/ do
-  pending # express the regexp above with the code you wish you had
+  Guard::JasmineHeadlessWebkit::Runner.stubs(:notify_report_file).returns(@report_file)
 end

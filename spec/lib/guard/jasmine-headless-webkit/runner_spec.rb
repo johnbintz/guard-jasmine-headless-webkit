@@ -16,7 +16,27 @@ describe Guard::JasmineHeadlessWebkit::Runner do
   end
 
   describe '.process_reporters' do
-    subject { 
+    subject { described_class.process_reporters(reporters, report_file) }
+
+    let(:report_file) { 'report file' }
+
+    context 'none provided' do
+      let(:reporters) { nil }
+
+      it { should == [ [ 'Console' ], [ 'File', report_file ] ] }
+    end
+
+    context 'one provided' do
+      let(:reporters) { 'One' }
+
+      it { should == [ [ 'One' ], [ 'File', report_file ] ] }
+    end
+
+    context 'two provided' do
+      let(:reporters) { 'One Two:file.txt' }
+
+      it { should == [ [ 'One' ], [ 'Two', 'file.txt' ], [ 'File', report_file ] ] }
+    end
   end
 
   describe '.notify' do

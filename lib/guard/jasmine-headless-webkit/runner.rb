@@ -5,14 +5,34 @@ module Guard
   class JasmineHeadlessWebkit
     class Runner
       def self.run(paths = [], options = {})
-        file = Tempfile.new('guard-jasmine-headless-webkit')
-        file.close
+        report_file = notify_report_file
 
-        options.merge!(:reporters => process_reporters, :colors => true, :files => paths)
+        options = options.merge(:reporters => process_reporters(options[:reporters], report_file), :colors => true, :files => paths)
 
         Jasmine::Headless::Runner.run(options)
 
-        notify(file.path)
+        notify(report_file)
+      end
+
+      def self.notify_report_file
+        file = Tempfile.new('guard-jasmine-headless-webkit')
+        file.close
+        file.path
+      end
+
+      def self.process_reporters(reporters, report_file)
+        reporters ||= 'Console'
+
+        out = []
+
+        reporters.split(' ').each do |reporter|
+          name, file = reporter.split(':', 2)
+
+          out << [ name ]
+          out.last << file if file && !file.empty?
+        end
+
+        out + [ [ 'File', report_file ] ]
       end
 
       def self.notify(file)

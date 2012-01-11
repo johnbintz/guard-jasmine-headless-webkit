@@ -1,10 +1,21 @@
 require 'rspec'
 require 'mocha'
+require 'fakefs/safe'
 
-World(Mocha::Standalone)
+require 'jasmine-headless-webkit'
+require 'guard/jasmine-headless-webkit'
+
+require 'coffee-script'
+
+World(Mocha::API)
 
 Before do
   mocha_setup
+
+  FakeFS.activate!
+
+  @report_file = 'notify-file'
+  @paths = []
 end
 
 After do
@@ -13,5 +24,7 @@ After do
   ensure
     mocha_teardown
   end
+
+  FakeFS.deactivate!
 end
 
