@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = "guard-jasmine-headless-webkit"
-  s.version     = '0.3.2'
+  s.version     = '0.4.0.rc1'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["John Bintz"]
   s.email       = ["john@coswellproductions.com"]
