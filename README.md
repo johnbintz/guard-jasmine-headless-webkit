@@ -53,3 +53,8 @@ file is a little more complicated. `newest_js_file` extends the Guard DSL to sea
 
 If you 100% know you won't need that support, modify your `Guardfile` as appropriate.
 
+## License
+
+This library is released under the MIT license:
+
+* http://www.opensource.org/licenses/MIT
