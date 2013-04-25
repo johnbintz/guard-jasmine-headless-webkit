@@ -1,12 +1,13 @@
 require 'guard'
 require 'guard/guard'
 require 'coffee-script'
+require 'ember_script'
 
 module Guard
   class JasmineHeadlessWebkit < Guard
     autoload :Runner,  'guard/jasmine-headless-webkit/runner'
 
-    DEFAULT_EXTENSIONS = %w{js coffee}
+    DEFAULT_EXTENSIONS = %w{js coffee em}
 
     ALL_SPECS_MESSAGE = "Guard::JasmineHeadlessWebkit running all specs..."
     SOME_SPECS_MESSAGE = "Guard::JasmineHeadlessWebkit running the following: %s"
@@ -88,6 +89,7 @@ module Guard
     def run_something_and_rescue
       yield
     rescue ::CoffeeScript::CompilationError
+    rescue ::ExecJS::ProgramError
     rescue StandardError => e
       if ENV['GUARD_ENV'] == 'test'
         raise e
@@ -101,7 +103,7 @@ module Guard
 
   class Dsl
     def newest_js_file(path)
-      Dir[path + '*.{js,coffee}'].sort { |left, right| File.mtime(right) <=> File.mtime(left) }.first
+      Dir[path + '*.{js,coffee,em}'].sort { |left, right| File.mtime(right) <=> File.mtime(left) }.first
     end
   end
 end
